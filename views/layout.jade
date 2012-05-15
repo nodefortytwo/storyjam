@@ -2,5 +2,22 @@
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body!= body
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", type='text/css', href='/app/stylesheets/app.css')
+    script(type="text/javascript", src="/app/javascripts/app.js")
+  body
+   .navbar
+    .navbar-inner
+     .container
+      a(class="brand", href="#") StoryJam
+      ul(class="pull-right nav")
+       li(class="divider-vertical")
+       li 
+        a Login
+       li(class="divider-vertical") 
+       li 
+        a About
+   .container-fluid
+    .row-fluid
+     .span12
+      != body
