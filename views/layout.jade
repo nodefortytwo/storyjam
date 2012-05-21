@@ -4,19 +4,22 @@ html
     title= title
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel="stylesheet", type='text/css', href='/app/stylesheets/app.css')
-    script(type="text/javascript", src="/app/javascripts/app.js")
+    script(type="text/javascript", src="/scripts.js")
+    script(type="text/javascript", src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAcXkDt7ABmkhmdZ_Y_-ECxzycjPIGikiA&sensor=true")
   body
-   .navbar
+   .navbar.navbar-fixed-top
     .navbar-inner
      .container
       a(class="brand", href="#") StoryJam
       ul(class="pull-right nav")
        li(class="divider-vertical")
        li 
-        a Login
+        a(href="/fb_authorize")#login 
+         i.icon-user.icon-white
+         span  Login
        li(class="divider-vertical") 
        li 
-        a About
+        a(href="/about") About
    .container-fluid
     .row-fluid
      .span12
