@@ -10,5 +10,6 @@
     , "uglify-js" : "latest"
     , "facebook-js" : "latest"
     , "now" : "latest"
+    , "mongodb" : "latest"
   }
 }

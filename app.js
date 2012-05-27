@@ -2,8 +2,8 @@
  * Module dependencies.
  */
 
-var express = require('express'), routes = require('./routes'), fb = require('facebook-js'), fs = require('fs');
-var users = require('./routes/users');
+var express = require('express'), routes = require('./routes'), fs = require('fs');
+var user = require('./routes/user');
 var lessMiddleware = require('less-middleware');
 
 var pub = __dirname + '/public';
@@ -37,62 +37,42 @@ app.configure('development', function() {
 	}));
 	fbAppID = '364683150255491';
 	fbSecret = '8efbb7529522c1d71549ddc7eff2a000';
+	mongo = {
+		"hostname" : "ds033477.mongolab.com",
+		"port" : 33477,
+		"username" : "heroku_app4649681",
+		"password" : "4649681",
+		"db" : "heroku_app4649681"
+	}
 });
 
 app.configure('production', function() {
 	app.use(express.errorHandler());
 	fbAppID = '364683150255491';
 	fbSecret = '8efbb7529522c1d71549ddc7eff2a000';
+	mongo = {
+		"hostname" : "ds033477.mongolab.com",
+		"port" : 33477,
+		"username" : "heroku_app4649681",
+		"password" : "4649681",
+		"db" : "heroku_app4649681"
+	}
 });
 
-//Sort out mongo
-var mongo = {
-	"hostname" : "ds033477.mongolab.com",
-	"port" : 33477,
-	"username" : "heroku_app4649681",
-	"password" : "4649681",
-	"db" : "heroku_app4649681"
-}
 
-var generate_mongo_url = function(obj) {
-	obj.hostname = (obj.hostname || 'localhost');
-	obj.port = (obj.port || 27017);
-	obj.db = (obj.db || 'test');
-
-	if(obj.username && obj.password) {
-		return "mongodb://" + obj.username + ":" + obj.password + "@" + obj.hostname + ":" + obj.port + "/" + obj.db;
-	} else {
-		return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
-	}
-}
-mongourl = generate_mongo_url(mongo);
 // Routes
 app.get('/', routes.index);
 
-app.get('/fb_authorize', function(req, res) {
-	res.redirect(fb.getAuthorizeUrl({
-		client_id : fbAppID,
-		redirect_uri : 'http://localhost:5000/fb_thanks',
-		scope : ''//perms
-	}));
-});
+app.get('/fb_authorize', user.fb_auth);
 
-app.get('/fb_thanks', function(req, res) {
-	fb.getAccessToken(fbAppID, fbSecret, req.param('code'), 'http://localhost:5000/fb_thanks', function(error, access_token, refresh_token) {
-		res.render('client', {
-			access_token : access_token,
-			refresh_token : refresh_token,
-			title : 'Thanks!'
-		});
-	});
-});
+app.get('/fb_thanks', user.fb_thanks);
 
-app.get('/user/save', users.save);
+app.get('/user/save', user.save);
 
 //Compressed JS
 app.get('/scripts.js', function(req, res) {
 	get_js(false, function(js) {
-		console.log(js);
+
 		res.contentType('text/js');
 		res.end(js);
 	});

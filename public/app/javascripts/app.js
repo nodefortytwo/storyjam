@@ -1,7 +1,7 @@
 var uid = 0
 var accessToken = 0;
-var user;
-var session = new Array();
+var user = new Object;
+
 window.fbAsyncInit = function() {
 	FB.init({
 		appId : '364683150255491', // App ID
@@ -17,8 +17,9 @@ window.fbAsyncInit = function() {
 			accessToken = response.authResponse.accessToken;
 			console.log('calling /me');
 			FB.api('/me', function(response) {
+				tmp = user;
 				user = response;
-				session.user = user;
+				user.location = tmp.location;
 				update_login_info();
 			});
 		} else if(response.status === 'not_authorized') {
@@ -82,15 +83,17 @@ var update_login_info = function() {
 		$('#login').attr('href', '');
 		$('#login').html('Hi ' + user.first_name + '!');
 	}
+	$.ajax('http://localhost:5000/user/save?user=' + JSON.stringify(user)).done(function(){
+		alert('dude');
+	});
 }
 
 function GetLocation(location, callback) {
-    session.location = location;
-    session.location.gmap = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
-    map.panTo(session.location.gmap);
+    user.location = location;
+    gmap = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+    map.panTo(gmap);
     var marker = new google.maps.Marker({
-        position: session.location.gmap, 
-        map: map,
-        title:"Hello World!"
+        position: gmap, 
+        map: map
     }); 
 }
